@@ -1,0 +1,109 @@
+<!--A diferença desta página para a de perfil é de que um formulário de edição aparecerá abaixo
+do card do usuário-->
+
+<!--Importando toda a estrututa do arquivo 'perfil.html'-->
+{% extends 'perfil.html' %}
+
+{% block form_editar_perfil %}
+
+<!--Criando o formulário de edição-->
+<div class="container">
+        <hr>
+        <div class="row">
+            <div class="col">
+                <form method="POST" action="" class="border p-4 mt-2" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <legend>Editar Perfil</legend>
+                    <fieldset>
+                        <!--Campo de edição do username junto com a verificação de erros no preenchimento do espaço-->
+                        <div class="form-group">
+                            {{ form.username.label(class="form-control-label") }}
+                            {% if form.username.errors %}
+                                {{ form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.username.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.username(class="form-control") }}
+                            {% endif %}
+                        </div>
+                         <!--Campo de edição do email junto com a verificação de erros no preenchimento do espaço-->
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label") }}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.email.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ form.email(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        <!--Campo para a escolha de uma nova foto de perfil-->
+                        <div class='form-group'>
+                            {{form.foto_perfil.label(class='mt-2')}}<br>
+                            {{form.foto_perfil(class='form-control-file mt-1 mb-1')}}
+                            {% if form.foto_perfil.errors %}
+                                {% for erro in form.foto_perfil.errors %}
+                                    <span class="text-danger">{{ erro }}</span> <br>
+                                {% endfor %}
+                            {% endif %}
+
+                        </div>
+                        <!--Campo para a escolha das comunidades desejadas-->
+
+                        <div class="mt-2">
+                            <hr>
+                            <!--Campo de escolha das comunidades de interesse do usuário-->
+                            <legend>Escolha suas comunidades!</legend>
+                    
+                        <ul class="d-flex list-unstyled">
+
+                            <li> 
+                                <div class="form-group me-2">
+                                    {{form.com_politics(class='form-check-input')}}
+                                    {{form.com_politics.label(class='form-check-label')}}
+                                    
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="form-group me-2">
+                                    {{form.com_sports(class='form-check-input')}}
+                                    {{form.com_sports.label(class='form-check-label')}}
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="form-group me-2">
+                                    {{form.com_cucine(class='form-check-input')}}
+                                    {{form.com_cucine.label(class='form-check-label')}}
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="form-group me-2">
+                                    {{form.com_memes(class='form-check-input')}}
+                                    {{form.com_memes.label(class='form-check-label')}}
+                                </div>
+                            </li>
+                            
+
+                        </ul>
+                    </div>
+                        
+                        
+
+                    </fieldset>
+                    <!--Botão paraa confirmação das alterações-->
+                    {{ form.botao_submit_editarperfil(class="btn btn-primary mt-2") }}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+<!--Arquivo que contém a estrutura do navbar do Reddit. Ela estará presente no arquivo 'base.html', de modo que apareça
+    em todas as páginas do site-->
+<!--A sua estrutura veio pronta do site do Bootstrap-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <!--O logitipo do site 'Reddit', em laranja, levará o usuário à página home-->
+      <a class="navbar-brand" href="{{url_for('home')}}" style = 'color:#fd7e14'> <strong>Reddit</strong> </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <!--Outro link que envia o indivídio à home do site-->
+            <a class="nav-link" aria-current="page" href="{{url_for('home')}}">Início</a>
+          </li>
+          <li class="nav-item">
+            <!--Link para a página que catalogará os usuários-->
+            <a class="nav-link" href="{{url_for('usuarios')}}">Usuários</a>
+          </li>
+          <li class="nav-item">
+            <!--link paraa página de contato-->
+            <a class="nav-link" href="/contato">Contato</a>
+          </li>
+          <li class="nav-item">
+            <!--REMOVER ISTO DEPOIS-->
+            <a class="nav-link" href="/README">README</a>
+          </li>
+
+        </ul>
+        <ul class = 'd-flex navbar-nav' style = 'list-style:none'>
+          <!--Esta parte da navbar só aparecerá para pessoas logadas.-->
+          {% if current_user.is_authenticated %}
+          <!--Link para a página de Criar Post -->
+          <li class = 'nav-item'>  
+            <a class = 'nav-link' href = "{{url_for('criar_post')}}">Criar Post</a> 
+          </li>
+          <!--Link para a página que mostra as informações gerais do perfil da pessoa-->
+          <li class = 'nav-item'>  
+            <a class = 'nav-link' href = "{{url_for('perfil')}}">Meu Perfil</a> 
+          </li>
+          <!--Link de logout -->
+          <li class = 'nav-item'>  
+            <a class = 'nav-link' href = "{{url_for('sair')}}">Logout</a> 
+          </li>
+          <!--Caso a pessoa não esteja logada, um link para a página de Login e Cadastro aparecerá-->
+          {% else %}
+            <li class = 'nav-item'>  
+                <a class = 'nav-link' href = "{{url_for('cadastrologin')}}">Login e Cadastro</a> 
+            </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

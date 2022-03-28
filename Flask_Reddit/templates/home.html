@@ -1,0 +1,56 @@
+<!-- O comando extends invocará o os elementos de base.html para dentro da página 'home'-->
+{% extends 'base.html' %}
+{% block body %}
+<div style = 'text-align: center;'>
+    <h1 class="mt-2">Bem vindo ao Reddit!</h1>
+    <p style = 'font-size:20px;font-family:courier;color:red'> Sinta-se à vontade para expressar as suas ideias!</p>
+</div>
+<!--Exposição dos posts do site por meio de um loop.-->
+{% for post in posts %}
+    <div class="row border ms-4 me-4 mb-5 meupost">
+        <!--O compo com a foto e username terão 2 slots na coluna criada-->
+        <div class="col col-2"> 
+            <center>
+                <!--Mostrando o username precedido por um @-->
+            <p class="mt-2 mb-2" style="font-size:15px"> @<strong>{{post.autor.username}}</strong></p>
+            <!--O programa irá até o banco de dados do site para coletar o nome do arquivo da foto do usuário. Após isso, ele
+            buscará a imagem em si na pasta fotos_perfil, do diretório 'static' para mostrá-la no campo-->
+            <img src="{{url_for('static',filename = 'fotos_perfil/{}'.format(post.autor.foto_perfil))}}" width="150px" height="150px" >
+            </center>
+        </div>
+        <!--Uma coluna com 9 slots será destinada ao título e texto dos posts.-->
+        <div class="col col-9"> 
+            <a href="{{url_for('exibir_post', post_id=post.id)}}" style="color:#212529; text-decoration:none">
+            <h3 class="mt-2">
+                {{post.titulo}}
+                <!--Mostrando a data de publicação-->
+                <span class="text-muted ms-1" style="font-size:10px">Publicado em: {{post.data_criacao.strftime('%d/%m/%Y')}}<spanp>
+
+            </h3>
+            </a>
+            <hr class="mt-0">
+            <!--O corpo do post estará contido em uma tag <p>-->
+            <p>{{ post.corpo }}</p>
+            
+            <br><br>
+            <!--Esta lista vai expor todas as comunidades de interesse nas quais o usuário está inscrito-->
+            <ul class="d-flex list-unstyled">
+                <h4 class="mt-3 me-2" style="font-size:14px;color:rgba(7, 7, 7, 0.633)">Interesses do Usuário</h4>
+                {% for grupo in current_user.grupos.split(';') %}
+                        {% if current_user.grupos !='' %}
+                            {% if current_user.grupos != 'Não Informado.'%}
+                            <!--Definindo as configurações estéticas do botão-->
+                                <li>
+                                    <button style="color:white;background-color:#fd7e14" class="btn btn-sm mt-2 me-1" disabled>{{grupo}}</button>
+                                </li>  
+                            {% endif %} 
+                        {% endif %}
+                    {% endfor%}
+            </ul>
+
+        </div>
+
+    </div>
+{% endfor %}
+
+{% endblock %}

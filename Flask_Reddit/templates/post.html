@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block body %}
+<!--Página que mostra apenas o post no qual o usuário clicou quando estava na página home-->
+    <div class="row border mt-4 ms-4 me-4 mb-5 meupost">
+        <div class="col col-2"> 
+            <center>
+            <p class="mt-2 mb-2" style="font-size:15px"> @<strong>{{post.autor.username}}</strong></p>
+            <img src="{{url_for('static',filename = 'fotos_perfil/{}'.format(post.autor.foto_perfil))}}" width="150px" height="150px" >
+            </center>
+        </div>
+
+        <div class="col col-9"> 
+            <h3 class="mt-2">
+
+                {{post.titulo}}
+
+                {% if form %}
+            <!--O # sinaliza que o link nos leva a um item HTML dentro da página atual-->
+            <small style="font-size:12px">
+                    <a class="ms-2" href="#form_editarpost">Editar</a>
+                    <!--Com os links para modals, é convenção deixar o argumento 'href' apenas com uma #.-->
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#ExcluirPost" >Excluir</a>
+                {% endif %}
+            </small>
+            </h3>
+
+            <hr class="mt-0">
+            <p>{{ post.corpo }}</p>
+            <br><br>
+            <p class="text-muted" style="font-size:10px">Publicado em: {{post.data_criacao.strftime('%d/%m/%Y')}}</p>
+
+        </div>
+
+    </div>
+<!--Formulário de edição do post, exposto apenas se o usuário for o dono do post-->
+{% if form %}
+
+<div class="container">
+    <h1>Edite seu post</h1>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <form id="form_editarpost" method="POST" action="" class="border p-4 mt-2">
+                {{ form.csrf_token }}
+                <legend>Publicar Post</legend>
+                <fieldset>
+                    <div class="form-group">
+                        {{ form.titulo.label(class="form-control-label") }}
+                        {% if form.titulo.errors %}
+                            {{ form.titulo(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for erro in form.titulo.errors %}
+                                {{ erro }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ form.titulo(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.corpo.label(class="form-control-label") }}
+                        {% if form.corpo.errors %}
+                            {{ form.corpo(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for erro in form.corpo.errors %}
+                                {{ erro }}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ form.corpo(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    </fieldset>
+                    {{ form.botao_submit(class="btn btn-primary mt-2") }}
+                    </form>
+</div>
+
+<!-- Modal ou Pop-up de Exclusão do Post -->
+<!--Uma característica interessante dos  pop-up's é o fato de eles não serem visíveis na tela até a sua invocação.
+Portanto, não há problema de deixar o seu código por aqui.-->
+<div class="modal fade" id="ExcluirPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Excluir post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Você deseja excluir o post?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <!--O argumento 'action' invocará a função 'excluir_post', do arquivo routes.py-->
+          <form method="POST" action="{{url_for('excluir_post', post_id = post.id)}}">
+              <!--Ao definir type="submit", avisamos ao nosso site que o botão é utilizado para enviar informações.-->
+            <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+
+{% endblock %}

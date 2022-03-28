@@ -1,0 +1,53 @@
+<!-- Este arquivo mostrará todos os usuários do site-->
+{% extends 'base.html' %}
+
+{% block body %}
+<!-- Todo este trecho de código criará um card semelhante ao da página 'perfil' para cada pessoa cadastrada no Reddit-->
+<!--Obs: O código deste card de usuário foi obtido pronto na internet-->
+<div>
+<h1>Usuários</h1>
+{% for usuario in lista_usuarios %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-3">
+        <div class="d-flex align-items-center">                    <!--Anteriormente, essa class era 'rounded' apenas; width=200 sem height-->
+            <div class="image pe-2"> <img src= "{{url_for('static',filename = 'fotos_perfil/{}'.format(usuario.foto_perfil))}}" class="rounded" width="200"> </div>
+            <div class="ml-3 w-100">
+                <h4 class="mb-0 mt-0">{{ usuario.username }}</h4> <span>{{ usuario.email }}</span>
+                <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                    <!--Caso, no banco de dados, o usuário tenha '' ou 'Não informado como valor da coluna 'grupos',
+                    o site contabilizará 0 como o número de comunidades em que ele participa-->
+                    {% if usuario.grupos =='' or usuario.grupos =='Não Informado.' %}
+                            <div class="d-flex flex-column"> <span class="articles">Comunidades</span> <span class="number1"> 0 </span> </div>
+                        {% else %}
+                            <div class="d-flex flex-column"> <span class="articles">Comunidades</span> <span class="number1">{{usuario.grupos.split(';')|length}}</span> </div>
+                        {% endif %}
+                    <!--Contador de posts; nós contamos a quantidade de posts no atributo 'posts' de cada usuário.-->
+                    <div class="d-flex flex-column"> <span class="rating">Posts</span> <span class="number3">{{usuario.posts | length}}</span> </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <!--Criando o espaço em que o nomes das comunidades de gostos de cada usuário serão mostradas com um button-->
+    <div class="row justify-content-center">
+        <div class="col col-4" style="text-align:center">
+            <h1 style="font-size:30px">Cursos</h1 <br>
+                <hr>
+                {% for grupo in usuario.grupos.split(';') %}
+                    {% if usuario.grupos !='' %}
+                        {% if usuario.grupos != 'Não Informado.'%}
+                        <button style="color:white;background-color:#fd7e14" class="btn mt-2 me-1" disabled>{{grupo}}</button>
+                        {% endif %} 
+                    {% endif %}
+                {% endfor%}
+        </div>
+
+    </div>
+
+</div>
+    <hr>
+{% endfor %}
+</div>
+{% endblock %}
